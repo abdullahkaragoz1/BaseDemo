@@ -1,0 +1,170 @@
+﻿@model BaseDemo.Models.KullaniciViewModel
+
+
+@{
+    ViewBag.Title = "Kullanıcı Ekleme";
+}
+
+
+<h2>Kullanıcı Ekleme Ekranı</h2>
+
+
+@*Kayıt Formu*@
+@using (Html.BeginForm("KullaniciKaydet", "Kullanici", FormMethod.Post, new { id = "myForm", enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- start: TEXT FIELDS PANEL -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-external-link-square"></i>
+
+                    <br />
+                    <br />
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Kullanici.Ad, "Ad")
+                                    @Html.TextBoxFor(x => x.Kullanici.Ad, new { @class = "form-control" })
+                                    @*Güncelleme yaparken ıd yi post etmek için*@
+                                    @Html.HiddenFor(x => x.Kullanici.Id, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Kullanici.Soyad, "Soyad")
+                                    @Html.TextBoxFor(x => x.Kullanici.Soyad, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Kullanici.Telefon, "Telefon")
+                                    @Html.TextBoxFor(x => x.Kullanici.Telefon, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Kullanici.Email, "Email")
+                                    @Html.TextBoxFor(x => x.Kullanici.Email, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Kullanici.TipId, "Kullanıcı Tipi")
+                                    @Html.DropDownListFor(x => x.Kullanici.TipId, new List<SelectListItem>
+                            {
+                                new SelectListItem { Text = "Kullanıcı Tipini seçiniz", Value = "", Selected = true },
+                                new SelectListItem { Text = "Admin", Value = "1", Selected = false },
+                                new SelectListItem { Text = "User", Value = "2", Selected = false },
+                                new SelectListItem { Text = "Tahsilatçı", Value = "3", Selected = false },
+                                new SelectListItem { Text = "Hukuk", Value = "4", Selected = false },
+                            }, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Yeni Seçilen illeri tutmak için*@
+                        @Html.HiddenFor(x => x.Kullanici.Iller)
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Kullanici.Iller, "Çalıştığı İller")
+                                    @Html.DropDownListFor(x => x.Kullanici.Iller, new SelectList(Model.Illers, "Ad", "Ad"), "İl Seçiniz..", new { @class = "form-control search-select", multiple = "multiple", placeholder = "İl Seçiniz" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <br />
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Kullanici.Aktif, "Aktif mi?", new { style = "font-size:10pt;" })
+                                    @Html.CheckBoxFor(x => x.Kullanici.Aktif)
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class="row">
+                            @*SUBMİT BUTTON*@
+                            <div class="col-md-offset-4 col-md-3">
+                                <div class="form-group">
+                                    <button class="btn" type="submit" value="Kaydet" id="btnKaydet" style="background-color:#0aa4b4; color:white;">Kaydet</button>
+                                    @Html.ActionLink("Vazgeç", "Index", "Kullanici", new { area = "" }, new { @class = " btn btn-success" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+
+        //function myfunction() {
+        //    OptionText = 'Premium';
+        //    OptionValue = 'premium';
+        //$('.search-select').append("<option value='" + OptionValue + "' selected='selected'>" + OptionText + "</option>");
+        //}
+
+        $(".search-select").select2({
+            placeholder: "İlleri seçiniz",
+            allowClear: true,
+            tags: true
+        });
+
+
+
+        $(".search-select").select2().val("1").trigger("change");
+        //$(".search-select").select2().val("2").trigger("change");
+
+        //Form Verilerini Gönderme
+        $(document).on('submit', '#myForm', function () {
+
+            var Secilenler = [];
+            $('.search-select :checked').each(function () {
+                Secilenler += $(this).val() + ",";
+                Secilenler.split(',');
+                $("#Kullanici_Iller").val(Secilenler);
+            });
+            //Verileri Post Etme
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (obj) {
+                    alert('Kayıt Başarılı');
+                },
+                error: function (obj) {
+                    alert('Kayıt Başarısız...!');
+                }
+            });
+            return false;
+        });
+
+
+
+    });
+
+</script>

@@ -1,0 +1,46 @@
+﻿@model BaseDemo.Models.KullaniciViewModel
+
+
+@{
+    ViewBag.Title = "Kullanıcı Ekleme";
+}
+
+
+<h2>Kullanıcı Listeleme Ekranı</h2>
+
+
+@*Kayıt Formu*@
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Ad</th>
+            <th scope="col">Soyad</th>
+            <th scope="col">Telefon</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">TipId</th>
+            <th scope="col">Aktif</th>
+            <th scope="col">Iller</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Kullanicis)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Ad</td>
+                <td>@item.Soyad</td>
+                <td>@item.Telefon</td>
+                <td>@item.Email</td>
+                <td>@item.KullaniciTip.Adı</td>
+                <td>@item.Aktif</td>
+                <td>@item.Iller</td>
+                <td class="btn btn active">  @Html.ActionLink("Güncelle", "Kullanici", "Kullanici", new { id = @item.Id }, null)</td>
+                <td class="btn btn-danger">  @Html.ActionLink("Sil", "Sil", "Kullanici", new { id = @item.Id }, null)</td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
